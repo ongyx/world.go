@@ -4,8 +4,26 @@ package world
 // #cgo LDFLAGS: -L ${SRCDIR}/World/build -lworld -lm -lstdc++
 import "C"
 
-const (
-	FramePeriod = 5.0
-	F0Floor     = 71.0
-	F0Ceil      = 800.0
-)
+var DefaultOptions = &Options{
+	AllowedRange:     0.1,
+	ChannelsInOctave: 2.0,
+	F0Floor:          71.0,
+	F0Ceil:           800.0,
+	FFTSize:          nil,
+	FramePeriod:      5.0,
+	Q1:               -0.15,
+	Speed:            1,
+	Threshold:        0.85,
+}
+
+type Options struct {
+	AllowedRange     float64
+	ChannelsInOctave float64
+	F0Floor          float64
+	F0Ceil           float64
+	FFTSize          *int
+	FramePeriod      float64
+	Q1               float64
+	Speed            int
+	Threshold        float64
+}

@@ -9,14 +9,6 @@ type HarvestOptions struct {
 	FramePeriod float64
 }
 
-func DefaultHarvestOptions() *HarvestOptions {
-	return &HarvestOptions{
-		F0Floor,
-		F0Ceil,
-		FramePeriod,
-	}
-}
-
 func Harvest(x []float64, fs int, o *HarvestOptions) (f0, tpos []float64) {
 	FS := C.int(fs)
 	xLength := C.int(len(x))

@@ -4,26 +4,14 @@ package world
 // #include "world/d4c.h"
 import "C"
 
-type D4COptions struct {
-	Threshold float64
-	FFTSize   *int
-}
-
-func DefaultD4COptions() *D4COptions {
-	return &D4COptions{
-		0.85,
-		nil,
-	}
-}
-
-func D4C(x, f0, tpos []float64, fs int, o *D4COptions) [][]float64 {
+func D4C(x, f0, tpos []float64, fs int, o *Options) (ap *Matrix) {
 	FS := C.int(fs)
 	xLength := C.int(len(x))
 	f0Length := C.int(len(f0))
 
 	var fftSize C.int
 	if o.FFTSize == nil {
-		fftSize = C.GetFFTSizeForCheapTrick(FS, &C.CheapTrickOption{f0_floor: F0Floor})
+		fftSize = C.GetFFTSizeForCheapTrick(FS, &C.CheapTrickOption{f0_floor: C.double(DefaultOptions.F0Floor)})
 	} else {
 		fftSize = C.int(*o.FFTSize)
 	}
@@ -35,13 +23,7 @@ func D4C(x, f0, tpos []float64, fs int, o *D4COptions) [][]float64 {
 	n := int(f0Length)
 	m := (int(fftSize) / 2) + 1
 
-	ap := make([][]float64, n)
-	ptrs := make([]*C.double, n)
-
-	for i := range ap {
-		ap[i] = make([]float64, m)
-		ptrs[i] = (*C.double)(&ap[i][0])
-	}
+	ap = NewMatrix(n, m)
 
 	C.D4C(
 		(*C.double)(&x[0]),
@@ -52,7 +34,7 @@ func D4C(x, f0, tpos []float64, fs int, o *D4COptions) [][]float64 {
 		f0Length,
 		fftSize,
 		&co,
-		(**C.double)(&ptrs[0]),
+		ap.Pointer(),
 	)
 
 	return ap

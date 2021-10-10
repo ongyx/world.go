@@ -4,21 +4,7 @@ package world
 // #include "world/cheaptrick.h"
 import "C"
 
-type CheapTrickOptions struct {
-	Q1      float64
-	F0Floor float64
-	FFTSize *int
-}
-
-func DefaultCheapTrickOptions() *CheapTrickOptions {
-	return &CheapTrickOptions{
-		-0.15,
-		F0Floor,
-		nil,
-	}
-}
-
-func CheapTrick(x, f0, tpos []float64, fs int, o *CheapTrickOptions) [][]float64 {
+func CheapTrick(x, f0, tpos []float64, fs int, o *Options) (sp *Matrix) {
 	FS := C.int(fs)
 	xLength := C.int(len(x))
 	f0Length := C.int(len(f0))
@@ -38,14 +24,7 @@ func CheapTrick(x, f0, tpos []float64, fs int, o *CheapTrickOptions) [][]float64
 	n := int(f0Length)
 	m := (int(co.fft_size) / 2) + 1
 
-	spectrogram := make([][]float64, n)
-	// This contains a slice of pointers to the first element of each slice.
-	ptrs := make([]*C.double, n)
-
-	for i := range spectrogram {
-		spectrogram[i] = make([]float64, m)
-		ptrs[i] = (*C.double)(&spectrogram[i][0])
-	}
+	sp = NewMatrix(n, m)
 
 	C.CheapTrick(
 		(*C.double)(&x[0]),
@@ -55,8 +34,8 @@ func CheapTrick(x, f0, tpos []float64, fs int, o *CheapTrickOptions) [][]float64
 		(*C.double)(&f0[0]),
 		f0Length,
 		&co,
-		(**C.double)(&ptrs[0]),
+		sp.Pointer(),
 	)
 
-	return spectrogram
+	return sp
 }

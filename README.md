@@ -19,24 +19,24 @@
 
 Experimental CGo-based wrapper for the [WORLD] vocoder.
 
-**NOTE**: Some functions may have not been implemented yet. They are listed below:
+**NOTE**: Some functions may have not been implemented yet (refer to the table below):
 
-| pyworld                  | world.go   | implemented |
-|--------------------------|------------|-------------|
-| dio                      | Dio        | yes         |
-| harvest                  | Harvest    | yes         |
-| stonemask                | StoneMask  | yes         |
-| get_cheaptrick_fft_size  |            | no          |
-| get_cheaptrick_f0_floor  |            | no          |
-| cheaptrick               | CheapTrick | yes         |
-| d4c                      | D4C        | yes         |
-| synthesize               | Synthesize | yes         |
-| get_num_aperiodicities   |            | no          |
-| code_aperiodicity        |            | no          |
-| decode_aperiodicity      |            | no          |
-| code_spectral_envelope   |            | no          |
-| decode_spectral_envelope |            | no          |
-| wav2world                |            | no          |
+| pyworld                  | world.go   |
+|--------------------------|------------|
+| dio                      | Dio        |
+| harvest                  | Harvest    |
+| stonemask                | StoneMask  |
+| get_cheaptrick_fft_size  | -          |
+| get_cheaptrick_f0_floor  | -          |
+| cheaptrick               | CheapTrick |
+| d4c                      | D4C        |
+| synthesize               | Synthesize |
+| get_num_aperiodicities   | -          |
+| code_aperiodicity        | -          |
+| decode_aperiodicity      | -          |
+| code_spectral_envelope   | -          |
+| decode_spectral_envelope | -          |
+| wav2world                | WavToWorld |
 
 # Usage
 
@@ -52,15 +52,24 @@ var fs int
 f0, sp, ap := world.WavToWorld(x, fs)
 ```
 
-For each algorithm, there is a corresponding struct that represents the optional args of the pyworld functions.
-Defaults are also provided:
+`sp` and `ap` are represented by a custom `Matrix` type.
+To access the underlying `[][]float64` slice, use `mat.S`.
+
+Almost all algorithms accept a `Options` struct in their args.
+Most of the time, you can use the defaults:
 
 ```go
-dopt := world.DefaultDioOptions()
+f0, tpos := world.Dio(x, fs, world.DefaultOptions)
+```
 
-// change the options here...
+But if you need to customize the defaults, just copy them:
 
-f0, tpos := world.Dio(x, fs, dopt)
+```go
+o := *world.DefaultOptions
+
+// change defaults...
+
+f0, tpos := world.Dio(x, fs, &o)
 ```
 
 # Todo
