@@ -1,7 +1,8 @@
 package world
 
 // #cgo CFLAGS: -I ${SRCDIR}/World/src
-// #cgo LDFLAGS: -L ${SRCDIR}/World/build -lworld -lm -lstdc++
+// #cgo linux LDFLAGS: -L ${SRCDIR}/lib -lworld_linux -lm -lstdc++
+// #cgo windows LDFLAGS: -L ${SRCDIR}/lib -lworld_windows -lm -lstdc++
 import "C"
 
 var DefaultOptions = &Options{

@@ -72,6 +72,15 @@ o := *world.DefaultOptions
 f0, tpos := world.Dio(x, fs, &o)
 ```
 
+# Building/Installing
+
+Since world.go is a library, most of the time `go install` will work out of the box.
+
+For Linux and Windows, the `libworld.a` static library has been precompiled under the `lib/` folder.
+
+If you want to compile `libworld.a` from source, do `make cross-compile` which will compile both the Linux and Windows versions.
+This assumes that you are using a Linux system with both the native gcc compiler and the MSYS2 cross-compiler.
+
 # Todo
 
 - documentation
