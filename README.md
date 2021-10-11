@@ -74,7 +74,12 @@ f0, tpos := world.Dio(x, fs, &o)
 
 # Building/Installing
 
-Since world.go is a library, most of the time `go install` will work out of the box.
+Clone this repo and install:
+
+```
+git clone --recurse-submodules https://github.com/ongyx/world.go
+go install
+```
 
 For Linux and Windows, the `libworld.a` static library has been precompiled under the `lib/` folder.
 
